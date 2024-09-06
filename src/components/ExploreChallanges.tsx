@@ -201,7 +201,7 @@ const ExploreChallenges: React.FC = () => {
       return (
         <div
           key={challenge.id}
-          className="bg-white w-[354px] h-[500px] ml-[134px] rounded-lg overflow-hidden flex flex-col items-center"
+          className="bg-white w-[354px] h-[500px] ml-[28px] rounded-lg overflow-hidden flex flex-col items-center"
         >
           <img
             src={challenge.image}

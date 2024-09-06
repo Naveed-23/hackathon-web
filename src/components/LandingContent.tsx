@@ -7,7 +7,7 @@ const LandingContent = () => {
   return (
     <div className='bg-darkBg px-28 py-20'>
       <main className="flex items-center justify-center mb-12">
-        <div className="absolute mr-[1000px] mt-[184px] ml-[180px] mb-[93px] p-10">
+        <div className="absolute mr-[700px] mt-[184px] ml-[120px] mb-[93px] p-4">
             <h1 className="text-5xl font-medium text-white mb-6">
                 Accelerate Innovation with Global AI Challenges
             </h1>
@@ -32,5 +32,4 @@ const LandingContent = () => {
 
 
 
-  
 export default LandingContent;
