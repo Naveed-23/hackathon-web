@@ -53,7 +53,10 @@ const ExploreChallenges: React.FC = () => {
     setSearchTerm(e.target.value);
   };
 
-  const handleFilterChange = (filterType: string, filterValue: string) => {
+  const handleFilterChange = (
+    filterType: "status" | "level",
+    filterValue: keyof typeof filters["status"] | keyof typeof filters["level"]
+  ) => {
     setFilters((prevFilters) => {
       const updatedFilters = { ...prevFilters };
   
@@ -66,13 +69,13 @@ const ExploreChallenges: React.FC = () => {
           updatedFilters.status = {
             ...prevFilters.status,
             All: false,
-            [filterValue]: !prevFilters.status[filterValue],
+            [filterValue]: !prevFilters.status[filterValue as keyof typeof prevFilters.status],
           };
         }
       } else if (filterType === "level") {
         updatedFilters.level = {
           ...prevFilters.level,
-          [filterValue]: !prevFilters.level[filterValue],
+          [filterValue]: !prevFilters.level[filterValue as keyof typeof prevFilters.level],
         };
       }
   
@@ -80,23 +83,26 @@ const ExploreChallenges: React.FC = () => {
     });
   };
   
+  
+  
 
   useEffect(() => {
     const filteredData = challenges.filter((challenge) => {
       const matchesSearchTerm = challenge.title.toLowerCase().includes(searchTerm.toLowerCase());
-
-      const statusFilters = Object.entries(filters.status).filter(([key, value]) => value);
+  
+      const statusFilters = Object.entries(filters.status).filter(([_, value]) => value);
       const matchesStatus =
-        statusFilters.length === 0 || filters.status.All || filters.status[challenge.status];
-
-      const levelFilters = Object.entries(filters.level).filter(([key, value]) => value);
-      const matchesLevel = levelFilters.length === 0 || filters.level[challenge.level];
-
+        statusFilters.length === 0 || filters.status.All || filters.status[challenge.status as keyof typeof filters.status]; // Cast status
+  
+      const levelFilters = Object.entries(filters.level).filter(([_, value]) => value);
+      const matchesLevel = levelFilters.length === 0 || filters.level[challenge.level as keyof typeof filters.level]; // Cast level
+  
       return matchesSearchTerm && matchesStatus && matchesLevel;
     });
-
+  
     setFilteredChallenges(filteredData);
   }, [searchTerm, filters, challenges]);
+  
 
   const calculateTimeLeft = (startDate: string, endDate: string, status: string) => {
     const now = new Date();
@@ -154,35 +160,36 @@ const ExploreChallenges: React.FC = () => {
                 </button>
               </div>
               <div className="p-2 px-4 py-4">
-                <div className="mb-4">
-                  <h3 className="text-sm font-semibold mb-2">Status</h3>
-                  {["All", "Active", "Upcoming", "Past"].map((status) => (
-                    <label key={status} className="flex items-center mb-1">
-                      <input
-                        type="checkbox"
-                        checked={filters.status[status as keyof typeof filters.status]}
-                        onChange={() => handleFilterChange("status", status)}
-                        className="mr-2"
-                      />
-                      {status}
-                    </label>
-                  ))}
-                </div>
-                <div>
-                  <h3 className="text-sm font-semibold mb-2">Level</h3>
-                  {["Easy", "Medium", "Hard"].map((level) => (
-                    <label key={level} className="flex items-center mb-1">
-                      <input
-                        type="checkbox"
-                        checked={filters.level[level as keyof typeof filters.level]}
-                        onChange={() => handleFilterChange("level", level)}
-                        className="mr-2"
-                      />
-                      {level}
-                    </label>
-                  ))}
-                </div>
+              <div className="mb-4">
+                <h3 className="text-sm font-semibold mb-2">Status</h3>
+                {/* Status Filters */}
+                {["All", "Active", "Upcoming", "Past"].map((status) => (
+                  <label key={status} className="flex items-center mb-1">
+                    <input
+                      type="checkbox"
+                      checked={filters.status[status as keyof typeof filters.status]}
+                      onChange={() => handleFilterChange("status", status as "All" | "Active" | "Upcoming" | "Past")}
+                      className="mr-2"
+                    />
+                    {status}
+                  </label>
+                ))}
+
+                {/* Level Filters */}
+                {["Easy", "Medium", "Hard"].map((level) => (
+                  <label key={level} className="flex items-center mb-1">
+                    <input
+                      type="checkbox"
+                      checked={filters.level[level as keyof typeof filters.level]}
+                      onChange={() => handleFilterChange("level", level as "Easy" | "Medium" | "Hard")}
+                      className="mr-2"
+                    />
+                    {level}
+                  </label>
+                ))}
               </div>
+            </div>
+
             </div>
           )}
         </div>

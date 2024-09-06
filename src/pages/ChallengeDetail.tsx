@@ -32,8 +32,6 @@ const formatDateTime = (date: string) => {
 };
 
 const getChallengeStatusText = (startDate: string, endDate: string, status: string) => {
-  const start = new Date(startDate);
-  const end = new Date(endDate);
 
   if (status === 'Upcoming') {
     return `Starts on ${formatDateTime(startDate)} (India Standard Time)`;
